@@ -1,10 +1,13 @@
 CC = gcc -Wall -pedantic
 
-build:
+build_dir:
 	mkdir -p build
 
-main:
-	$(CC) -o build/main main.c
+element: build_dir
+	$(CC) -c -o build/element.o element.c
 
-run:
-	./$(EXE)
+bst: element
+	$(CC) -c -o build/bst.o bst.c
+
+main: bst
+	$(CC) -o build/main main.c build/bst.o build/element.o
