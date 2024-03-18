@@ -24,26 +24,83 @@ Node* createNode(Element key) {
     return node;
 }
 
-Node* makeSampleTree() {
-    Node* root = createNode(50);
-    root->left = createNode(43);
-    root->left->left = createNode(3);
-    root->left->right = createNode(48);
-    root->right = createNode(61);
-    root->right->left = createNode(58);
-    root->right->right = createNode(70);
-
-    return root;
-}
-
 BST* bst_create() {
     BST* bst = malloc(sizeof(BST));
 
-    // bst->root = NULL;
-    bst->root = makeSampleTree();
+    bst->root = NULL;
 
     return bst;
 }
+
+void bst_destroyRecur(Node* node) {
+    if (node == NULL) {
+        return;
+    }
+    bst_destroyRecur(node->left);
+    bst_destroyRecur(node->right);
+    free(node);
+}
+
+void bst_destroy(BST* bst) {
+    bst_destroyRecur(bst->root);
+    free(bst);
+}
+
+/**
+* Caso base 1: a árvore é vazia, cria um novo nó
+* Caso base 2: a chave já exista, termine
+* Caso recursivo 1: se a chave for menor que a chave da raiz atual, 
+*                   recursão à esquerda
+* Caso recursivo 2: se a chave for maior que a chave da raiz atual,
+*                   recursão à direita
+*/
+Node* bst_insertRecur(Node* node, Element key) {
+    if (node == NULL) {
+        return createNode(key);
+    }
+    if (key < node->key) {
+        node->left = bst_insertRecur(node->left, key);
+    } else if (key > node->key) {
+        node->right = bst_insertRecur(node->right, key);
+    }
+
+    return node;
+}
+
+
+void bst_insertIter(BST* bst, Element key) {
+    if (bst->root == NULL) {
+        bst->root = createNode(key);
+
+        return;
+    }
+
+    Node* parent = NULL;
+    Node* cur = bst->root;
+
+    while (cur != NULL) {
+        if (cur->key == key) {
+            return;
+        } else if (key < cur->key) {
+            parent = cur;
+            cur = cur->left;
+        } else if (key > cur->key) {
+            parent = cur;
+            cur = cur->right;
+        }
+    }
+
+    if (key < parent->key) {
+        parent->left = createNode(key);
+    } else if (key > parent->key){
+        parent->right = createNode(key);
+    }
+}
+
+void bst_insert(BST* bst, Element key) {
+    bst->root = bst_insertRecur(bst->root, key);
+}
+
 
 bool bst_searchRecur(Node* node, Element key) {
     if (node == NULL) {
@@ -67,10 +124,11 @@ void bst_printInOrderRecur(Node* node) {
     if (node == NULL) {
         return;
     }
-    bst_printInOrderRecur(node->left);
+    bst_printInOrderRecur(node->right);
     element_print(node->key);
     printf(" ");
-    bst_printInOrderRecur(node->right);
+    bst_printInOrderRecur(node->left);
+    
 }
 
 void bst_printInOrder(BST* bst) {
