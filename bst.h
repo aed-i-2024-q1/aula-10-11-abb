@@ -12,6 +12,7 @@ void bst_destroy(BST* bst);
 bool bst_search(BST* bst, Element key);
 void bst_insert(BST* bst, Element key);
 void bst_remove(BST* bst, Element key);
+void bst_print(BST* bst); 
 void bst_printInOrder(BST* bst);
 void bst_printPreOrder(BST* bst);
 void bst_printPostOrder(BST* bst);

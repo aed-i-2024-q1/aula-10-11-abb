@@ -14,10 +14,33 @@ struct BST {
     Node* root;
 };
 
+Node* createNode(Element key) {
+    Node* node = malloc(sizeof(Node));
+
+    node->key = key;
+    node->left = NULL;
+    node->right = NULL;
+
+    return node;
+}
+
+Node* makeSampleTree() {
+    Node* root = createNode(50);
+    root->left = createNode(43);
+    root->left->left = createNode(3);
+    root->left->right = createNode(48);
+    root->right = createNode(61);
+    root->right->left = createNode(58);
+    root->right->right = createNode(70);
+
+    return root;
+}
+
 BST* bst_create() {
     BST* bst = malloc(sizeof(BST));
 
-    bst->root = NULL;
+    // bst->root = NULL;
+    bst->root = makeSampleTree();
 
     return bst;
 }
@@ -83,4 +106,21 @@ void printPostOrderRecur(Node* node) {
 void bst_printPostOrder(BST* bst) {
     printPostOrderRecur(bst->root);
     printf("\n");
+}
+
+void bst_printDiagram(Node* node, int level) {
+  if (node == NULL) {
+      return;
+  }
+  for (int i = 0; i < level; i++) {
+    printf("  ");
+  }
+  element_print(node->key);
+  printf("\n");
+  bst_printDiagram(node->left, level + 1);  
+  bst_printDiagram(node->right, level + 1);
+}
+
+void bst_print(BST* bst) {
+  bst_printDiagram(bst->root, 0);
 }
