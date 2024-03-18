@@ -47,6 +47,7 @@ void bst_destroy(BST* bst) {
 }
 
 /**
+ * Versao recursiva do algoritmo de inserção
 * Caso base 1: a árvore é vazia, cria um novo nó
 * Caso base 2: a chave já exista, termine
 * Caso recursivo 1: se a chave for menor que a chave da raiz atual, 
@@ -67,7 +68,11 @@ Node* bst_insertRecur(Node* node, Element key) {
     return node;
 }
 
-
+/**
+ * Versão iterativa do algoritmo de inserção.
+ * Utiliza dois ponteiros de percurso para achar a posição 
+ * a inserir.
+*/
 void bst_insertIter(BST* bst, Element key) {
     if (bst->root == NULL) {
         bst->root = createNode(key);
@@ -97,8 +102,14 @@ void bst_insertIter(BST* bst, Element key) {
     }
 }
 
+/**
+ * Função da API para inserção. Pode chamar
+ * ou a versão recursiva, ou a iterativa, 
+ * a critério do projetista
+*/
 void bst_insert(BST* bst, Element key) {
     bst->root = bst_insertRecur(bst->root, key);
+    // bst_insertIter(bst, key);
 }
 
 
