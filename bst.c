@@ -122,6 +122,22 @@ Node* bst_successor(Node* node) {
     return cur;
 }
 
+/**
+ * Versão recursiva do algoritmo de remoção
+ * Caso base 1: a árvore é vazia ou a chave não existe, retorne
+ * Caso base 2: caso a chave seja encontrada, remova
+ *    Caso base 2.1: se a raiz atual apenas 1 filho,
+ *                   a raiz atual é substituída pelo filho
+ *    Caso base 2.2: se a raiz atual não tem filhos
+ *                   remova a raiz atual
+ *    Caso base 2.3: se a raiz atual tem filhos à esquerda e à direita,
+ *                   ache o sucessor, substitua a raiz atual pelo sucessor
+ *                   e remova o sucessor
+ * Caso recursivo 1: se a chave for menor que a chave da raiz atual,
+ *                  recursão à esquerda
+ * Caso recursivo 2: se a chave for maior que a chave da raiz atual,
+ *                 recursão à direita
+*/
 Node* bst_removeRecur(Node* node, Element key) {
     if (node == NULL) {
         return node;
@@ -152,8 +168,84 @@ Node* bst_removeRecur(Node* node, Element key) {
     return node;
 }
 
+/**
+ * Versão iterativa do algoritmo de remoção
+ * Utiliza dois ponteiros de percurso para achar a posição 
+ * a remover.
+ * Procurar a chave a ser removida
+ * Caso 1: a árvore é vazia, retorne
+ * Caso 2: a chave não existe, retorne
+ * Caso 3: a chave é encontrada
+ *   Caso 3.1: se a raiz atual apenas 1 filho,
+ *            a raiz atual é substituída pelo filho
+ *  Caso 3.2: se a raiz atual não tem filhos
+ *           remova a raiz atual
+ * Caso 3.3: se a raiz atual tem filhos à esquerda e à direita,
+ *          ache o sucessor, substitua a raiz atual pelo sucessor
+ *         e remova o sucessor
+*/
+void bst_removeIter(BST* bst, Element key) {
+    Node* parent = NULL;
+    Node* cur = bst->root;
+
+    while (cur != NULL) {
+        if (cur->key == key) {
+            break;
+        } else if (key < cur->key) {
+            parent = cur;
+            cur = cur->left;
+        } else {
+            parent = cur;
+            cur = cur->right;
+        }
+    }
+
+    if (cur == NULL) {
+        return;
+    }
+
+    if (cur->left == NULL) {
+        if (parent == NULL) {
+            bst->root = cur->right;
+        } else if (parent->left == cur) {
+            parent->left = cur->right;
+        } else {
+            parent->right = cur->right;
+        }
+        free(cur);
+    } else if (cur->right == NULL) {
+        if (parent == NULL) {
+            bst->root = cur->left;
+        } else if (parent->left == cur) {
+            parent->left = cur->left;
+        } else {
+            parent->right = cur->left;
+        }
+        free(cur);
+    } else {
+        Node* successor = cur->right;
+        parent = cur;
+
+        while (successor->left != NULL) {
+            parent = successor;
+            successor = successor->left;
+        }
+
+        cur->key = successor->key;
+
+        if (parent->left == successor) {
+            parent->left = successor->right;
+        } else {
+            parent->right = successor->right;
+        }
+
+        free(successor);
+    }
+}
+
 void bst_remove(BST* bst, Element key) {
     bst->root = bst_removeRecur(bst->root, key);
+    // bst_removeIter(bst, key);
 }
 
 
