@@ -112,6 +112,50 @@ void bst_insert(BST* bst, Element key) {
     // bst_insertIter(bst, key);
 }
 
+Node* bst_successor(Node* node) {
+    Node* cur = node->right;
+
+    while (cur->left != NULL) {
+        cur = cur->left;
+    }
+
+    return cur;
+}
+
+Node* bst_removeRecur(Node* node, Element key) {
+    if (node == NULL) {
+        return node;
+    }
+    if (key < node->key) {
+        node->left = bst_removeRecur(node->left, key);
+    } else if (key > node->key) {
+        node->right = bst_removeRecur(node->right, key);
+    } else {
+        if (node->left == NULL) {
+            Node* trash = node;
+
+            node = node->right;
+            free(trash);
+        } else if (node->right == NULL) {
+            Node* trash = node;
+
+            node = node->left;
+            free(trash);
+        } else {
+            Node* successor = bst_successor(node);
+
+            node->key = successor->key;
+            node->right = bst_removeRecur(node->right, successor->key);
+        }
+    }
+
+    return node;
+}
+
+void bst_remove(BST* bst, Element key) {
+    bst->root = bst_removeRecur(bst->root, key);
+}
+
 
 bool bst_searchRecur(Node* node, Element key) {
     if (node == NULL) {

@@ -59,11 +59,43 @@ void testPrint() {
     bst_destroy(bst);
 }
 
+void testRemove() {
+    BST* bst = bst_create();
+    Element elements[] = {50, 43, 3, 48, 61, 58, 70};
+
+    for (int i = 0; i < 7; i++) {
+        bst_insert(bst, elements[i]);
+    }
+
+    bst_print(bst);
+    printf("\n");
+    bst_remove(bst, 3);
+    bst_print(bst);
+    printf("\n");
+    bst_remove(bst, 43);
+    bst_print(bst);
+    printf("\n");
+    bst_remove(bst, 61);
+    bst_print(bst);
+    printf("\n");
+
+    // bst_remove(bst, 48);
+    // bst_print(bst);
+    // printf("\n");
+
+    // bst_remove(bst, 50);
+    // bst_print(bst);
+    // printf("\n");
+
+    bst_destroy(bst);
+}
+
 int main() {
     // testSearch();
     // testTraversals();
     // testPrint();
-    testInsert();
+    // testInsert();
+    testRemove();
 
     return 0;
 }
